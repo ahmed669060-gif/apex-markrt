@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أبيكس | APEX - السوق العالمي المفتوح</title>
+    <!-- Google Search Console Verification Tag -->
+    <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0f172a; color: #fff; min-height: 100vh; }
+
+        /* ---------------- الهيدر الرئيسي (مثل أمازون) ---------------- */
+        header { background-color: #1e293b; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ff9900; position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 28px; font-weight: 900; color: #ff9900; cursor: pointer; letter-spacing: 2px; }
+        .search-bar { display: flex; flex: 1; max-width: 500px; margin: 0 20px; }
+        .search-bar input { width: 100%; padding: 10px 15px; border-radius: 0 6px 6px 0; border: none; outline: none; background: #0f172a; color: #fff; }
+        .search-bar button { background: #ff9900; border: none; padding: 10px 20px; border-radius: 6px 0 0 6px; cursor: pointer; color: #fff; font-weight: bold; }
+        .nav-btns button { background: linear-gradient(135deg, #ff9900, #e68a00); color: #fff; border: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-left: 10px; }
+        
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+
+        /* ---------------- الصفحة الرئيسية (معرض المنتجات) ---------------- */
+        .hero-banner { background: linear-gradient(to right, #1e293b, #334155); padding: 30px; border-radius: 12px; margin-bottom: 30px; text-align: center; border: 1px solid #334155; }
+        .hero-banner h1 { font-size: 32px; color: #ff9900; margin-bottom: 10px; }
+        .hero-banner p { color: #94a3b8; }
+
+        .section-title { font-size: 22px; color: #f8fafc; margin-bottom: 20px; border-right: 4px solid #ff9900; padding-right: 10px; }
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+
+        .product-card { background: #1e293b; border: 1px solid #334155; border-radius: 10px; padding: 15px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-card:hover { transform: translateY(-5px); border-color: #ff9900; box-shadow: 0 5px 15px rgba(255,153,0,0.2); }
+        .product-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
+        .product-card h3 { font-size: 16px; margin-bottom: 8px; color: #f1f5f9; }
+        .product-card .price { color: #22c55e; font-size: 18px; font-weight: bold; margin-bottom: 8px; }
+        .product-card .merchant-tag { font-size: 12px; color: #94a3b8; }
+
+        /* ---------------- نافذة تفاصيل المنتج (Modal) ---------------- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .modal-content { background: #1e293b; padding: 30px; border-radius: 12px; max-width: 800px; width: 100%; border: 1px solid #ff9900; max-height: 90vh; overflow-y: auto; position: relative; }
+        .close-btn { position: absolute; top: 15px; left: 20px; font-size: 24px; color: #ff9900; cursor: pointer; }
+        .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        @media(max-width: 768px){ .modal-grid { grid-template-columns: 1fr; } }
+        .modal img { width: 100%; height: 260px; object-fit: cover; border-radius: 8px; }
+        .wa-btn { display: inline-block; width: 100%; background: #25D366; color: white; text-align: center; padding: 12px; border-radius: 6px; font-weight: bold; text-decoration: none; margin-top: 15px; font-size: 16px; }
+
+        /* ---------------- صفحة التسجيل ولوحة التحكم ---------------- */
+        #registerPage, #dashboardPage { display: none; }
+        .form-card { background: #1e293b; padding: 30px; border-radius: 12px; max-width: 500px; margin: 40px auto; border: 1px solid #334155; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #cbd5e1; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; background: #0f172a; border: 1px solid #334155; border-radius: 6px; color: #fff; }
+        .submit-btn { width: 100%; background: #ff9900; color: white; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر العلوي -->
+    <header>
+        <div class="logo" onclick="showPage('homePage')">APEX</div>
+        <div class="search-bar">
+            <input type="text" placeholder="ابحث عن جميع المنتجات العالمية...">
+            <button>بحث</button>
+        </div>
+        <div class="nav-btns">
+            <button onclick="showPage('registerPage')">تسجيل تاجر جديد</button>
+            <button id="dashBtn" style="display:none;" onclick="showPage('dashboardPage')">لوحة متجري</button>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- 1. الواجهة الرئيسية (معرض أسلوب أمازون المفتوح) -->
+        <div id="homePage">
+            <div class="hero-banner">
+                <h1>سوق أبيكس العالمي (APEX)</h1>
+                <p>تصفح جميع منتجات التجار من كافة الدول وتواصل مع التاجر مباشرة عبر الواتساب</p>
+            </div>
+
+            <h2 class="section-title">جميع المنتجات المعروضة حديثاً</h2>
+            <div class="market-grid" id="globalMarketGrid">
+                <!-- المنتجات العامة تظهر هنا -->
+            </div>
+        </div>
+
+        <!-- 2. صفحة التسجيل -->
+        <div id="registerPage">
+            <div class="form-card">
+                <h2 style="color:#ff9900; text-align:center; margin-bottom:20px;">انضم إلى منصة أبيكس كتاجر</h2>
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group"><label>اسم المتجر / التاجر</label><input type="text" id="regStore" required></div>
+                    <div class="form-group"><label>البريد الإلكتروني</label><input type="email" id="regEmail" required></div>
+                    <div class="form-group"><label>كلمة المرور</label><input type="password" required minlength="6"></div>
+                    <div class="form-group">
+                        <label>الدولة</label>
+                        <select id="regCountry">
+                            <option value="اليمن">اليمن</option>
+                            <option value="السعودية">المملكة العربية السعودية</option>
+                            <option value="الإمارات">الإمارات العربية المتحدة</option>
+                            <option value="مصر">مصر</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>رقم الواتساب (مع الرمز الدولي)</label><input type="tel" id="regWa" placeholder="+967783300783" required></div>
+                    <button type="submit" class="submit-btn">إنشاء المتجر الآن</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 3. لوحة تحكم التاجر -->
+        <div id="dashboardPage">
+            <h2 class="section-title" id="merchantTitle">لوحة التحكم الخاصّة بمتجرك</h2>
+            <div class="form-card" style="max-width:100%;">
+                <h3 style="color:#ff9900; margin-bottom:15px;">إضافة منتج جديد لمتجرك في أبيكس</h3>
+                <form onsubmit="handleAddProduct(event)">
+                    <div class="form-group"><label>اسم المنتج</label><input type="text" id="pName" required></div>
+                    <div class="form-group"><label>السعر ($)</label><input type="number" id="pPrice" required></div>
+                    <div class="form-group"><label>اختر صورة المنتج من الجهاز</label><input type="file" id="pFile" accept="image/*" required></div>
+                    <button type="submit" class="submit-btn">نشر المنتج في منصة أبيكس للجميع</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- نافذة تفاصيل المنتج (عند الضغط على أي منتج) -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div class="modal-grid">
+                <div>
+                    <img id="modalImg" src="" alt="صورة المنتج">
+                </div>
+                <div>
+                    <h2 id="modalTitle" style="color:#fff; margin-bottom:10px;"></h2>
+                    <div id="modalPrice" style="color:#22c55e; font-size:24px; font-weight:bold; margin-bottom:15px;"></div>
+                    <p id="modalMerchant" style="color:#94a3b8; margin-bottom:8px;"></p>
+                    <p id="modalCountry" style="color:#94a3b8; margin-bottom:20px;"></p>
+                    
+                    <a id="modalWaBtn" href="" target="_blank" class="wa-btn">💬 تواصل مع التاجر عبر الواتساب مباشرة</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // مصفوفة لتخزين جميع منتجات المنصة
+        let globalProducts = [
+            { id: 1, name: "عباية راقية كلاسيك", price: "60", img: "https://via.placeholder.com/300/1e293b/fff?text=عباية+راقية", merchant: "لمسه وابداع للعبايات الراقيه", country: "اليمن", wa: "967783300783" },
+            { id: 2, name: "ساعة ذكية مقاومة للماء", price: "45", img: "https://via.placeholder.com/300/1e293b/fff?text=ساعة+ذكية", merchant: "متجر القمة العالمي", country: "السعودية", wa: "966500000000" }
+        ];
+
+        let currentMerchant = null;
+
+        // عرض المنتجات في الصفحة الرئيسية
+        function renderGlobalMarket() {
+            const grid = document.getElementById('globalMarketGrid');
+            grid.innerHTML = '';
+            globalProducts.forEach(p => {
+                grid.innerHTML += `
+                    <div class="product-card" onclick="openProductModal(${p.id})">
+                        <img src="${p.img}" alt="${p.name}">
+                        <h3>${p.name}</h3>
+                        <div class="price">$${p.price}</div>
+                        <div class="merchant-tag">التاجر: ${p.merchant} (${p.country})</div>
+                    </div>
+                `;
+            });
+        }
+
+        // فتح تفاصيل المنتج
+        function openProductModal(id) {
+            const p = globalProducts.find(item => item.id === id);
+            if(p) {
+                document.getElementById('modalImg').src = p.img;
+                document.getElementById('modalTitle').innerText = p.name;
+                document.getElementById('modalPrice').innerText = "$" + p.price;
+                document.getElementById('modalMerchant').innerText = "📍 التاجر: " + p.merchant;
+                document.getElementById('modalCountry').innerText = "🌍 الدولة: " + p.country;
+                document.getElementById('modalWaBtn').href = `https://wa.me/${p.wa.replace('+','')}` + `?text=مرحباً،%20أرغب%20بشراء%20منتج:%20${encodeURIComponent(p.name)}`;
+                document.getElementById('productModal').style.display = 'flex';
+            }
+        }
+
+        function closeModal() { document.getElementById('productModal').style.display = 'none'; }
+
+        // التنقل بين الصفحات
+        function showPage(pageId) {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('registerPage').style.display = 'none';
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById(pageId).style.display = 'block';
+        }
+
+        // تسجيل التاجر
+        function handleRegister(e) {
+            e.preventDefault();
+            currentMerchant = {
+                store: document.getElementById('regStore').value,
+                email: document.getElementById('regEmail').value,
+                country: document.getElementById('regCountry').value,
+                wa: document.getElementById('regWa').value
+            };
+            document.getElementById('merchantTitle').innerText = "لوحة تحكم: " + currentMerchant.store;
+            document.getElementById('dashBtn').style.display = 'inline-block';
+            showPage('dashboardPage');
+        }
+
+        // إضافة منتج جديد
+        function handleAddProduct(e) {
+            e.preventDefault();
+            const file = document.getElementById('pFile').files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const newProd = {
+                        id: Date.now(),
+                        name: document.getElementById('pName').value,
+                        price: document.getElementById('pPrice').value,
+                        img: evt.target.result,
+                        merchant: currentMerchant.store,
+                        country: currentMerchant.country,
+                        wa: currentMerchant.wa
+                    };
+                    globalProducts.unshift(newProd); // إضافته أول القائمة
+                    renderGlobalMarket(); // تحديث السوق
+                    showPage('homePage'); // العودة للرئيسية لرؤية المنتج
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // تشغيل العرض الأولي
+        renderGlobalMarket();
+    </script>
+</body>
+</html>
